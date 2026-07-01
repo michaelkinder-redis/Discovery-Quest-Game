@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="_ds/redis-brand-design-system-ce80d8ec-3680-451b-9456-7f55cc295dbf/styles/fonts.css">
+  <link rel="stylesheet" href="_ds/redis-brand-design-system-ce80d8ec-3680-451b-9456-7f55cc295dbf/styles/tokens.css">
+  <link rel="stylesheet" href="_ds/redis-brand-design-system-ce80d8ec-3680-451b-9456-7f55cc295dbf/styles/components.css">
+  <script src="_ds/redis-brand-design-system-ce80d8ec-3680-451b-9456-7f55cc295dbf/_ds_bundle.js"></script>
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; background: #05111A; }
+    * { box-sizing: border-box; }
+    .arch-arrow { align-self: center; color: #3A5563; flex: none; font-size: 16px; padding: 0 2px; }
+    .arch-col, .arch-arrow { transition: opacity 220ms ease; }
+    .arch-row:has(.arch-col:hover) .arch-col:not(:hover),
+    .arch-row:has(.arch-col:hover) .arch-arrow { opacity: 0.2; }
+    .rl-neutral, .rl-redis { transition: opacity 200ms ease; }
+    .rl-redis { opacity: 0; }
+    .arch-col:hover .rl-neutral { opacity: 0; }
+    .arch-col:hover .rl-redis { opacity: 1; }
+  </style>
+</helmet>
+
+<template id="__bundler_thumbnail">
+  <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100" height="100" fill="#091A23"/>
+    <rect x="30" y="34" width="40" height="9" rx="3" fill="#FF4438"/>
+    <rect x="30" y="46" width="40" height="9" rx="3" fill="#DCFF1E"/>
+    <rect x="30" y="58" width="40" height="9" rx="3" fill="#80DBFF"/>
+  </svg>
+</template>
+
+<div style="position: fixed; inset: 0; background: #05111A; overflow: hidden; font-family: var(--rd-font-sans);">
+
+  <div ref="{{ stageRef }}" style="position: absolute; left: 50%; top: 50%; width: 1600px; height: 900px; transform: translate(-50%, -50%) scale({{ scale }}); transform-origin: center center; background: var(--rd-midnight-base); display: flex; flex-direction: column; padding: 32px 68px 24px; color: #fff;">
+
+    <!-- ===== HEADER ===== -->
+    <div style="display: flex; align-items: center; justify-content: space-between; flex: none;">
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <img src="uploads/Redis_logo.svg.png" alt="Redis" style="height: 24px; width: auto; display: block;">
+        <span style="width: 1px; height: 22px; background: #2D4754;"></span>
+        <span style="font-family: var(--rd-font-mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--rd-dusk-04);">Real-Time Decisioning Demo&nbsp;&nbsp;·&nbsp;&nbsp;L'Oréal</span>
+      </div>
+      <div style="font-family: var(--rd-font-mono); font-size: 13px; color: var(--rd-dusk-05);">
+        <span style="color: var(--rd-hyper-04);">{{ counterNum }}</span> / {{ counterTotal }}
+      </div>
+    </div>
+
+    <!-- ===== PIPELINE STEPPER ===== -->
+    <div style="display: flex; align-items: flex-start; gap: 4px; margin-top: 18px; padding-bottom: 16px; border-bottom: 1px solid #16303C; flex: none;">
+      <sc-for list="{{ steps }}" as="step" hint-placeholder-count="9">
+        <button onClick="{{ step.onClick }}" style="flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; gap: 7px; background: none; border: none; cursor: pointer; padding: 0;">
+          <span style="width: 26px; height: 26px; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-family: var(--rd-font-mono); font-size: 12px; background: {{ step.circleBg }}; color: {{ step.circleFg }}; border: 1px solid {{ step.circleBorder }}; transition: all 160ms;">{{ step.num }}</span>
+          <span style="font-size: 11px; line-height: 1.15; text-align: center; color: {{ step.labelColor }}; font-weight: {{ step.labelWeight }}; letter-spacing: 0.01em;">{{ step.label }}</span>
+        </button>
+      </sc-for>
+    </div>
+
+    <!-- ===== CONTENT ===== -->
+    <div ref="{{ contentRef }}" style="flex: 1; min-height: 0; position: relative; margin-top: 20px;">
+
+      <!-- ===================== STAGE 1 · ARCHITECTURE (vendor-neutral) ===================== -->
+      <section data-screen-label="01 Architecture" style="position: absolute; inset: 0; display: {{ d0 }}; flex-direction: column;">
+        <div style="display: flex; flex-direction: column; gap: 6px; flex: none;">
+          <span style="font-family: var(--rd-font-mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--rd-hyper-04);">Stage 1 · The architecture today</span>
+          <h2 style="margin: 0; font-weight: 500; font-size: 34px; line-height: 1.04; letter-spacing: -0.02em;">L'Oréal's real-time decisioning stack.</h2>
+          <p style="margin: 2px 0 0; font-size: 14.5px; line-height: 1.5; color: var(--rd-dusk-04); max-width: 1080px;">Before Redis: Adobe CDP, commerce, and behavioral systems feed a ~100ms decisioning layer. Personalization is targeted to resolve in under 10ms — but advancing the predictive model's complexity is pressuring that SLA, especially during spikes in traffic.</p>
+        </div>
+
+        <div class="arch-row" style="flex: 1; min-height: 0; display: flex; align-items: stretch; gap: 2px; margin-top: 18px;">
+
+          <!-- Col: Data Sources -->
+          <div class="arch-col" style="flex: 1.15; min-width: 0; display: flex; flex-direction: column; gap: 7px; border-top: 2px solid var(--rd-blue-03); padding-top: 8px;">
+            <span style="font-family: var(--rd-font-mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rd-blue-03);">Data Sources</span>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 8px 10px; display: flex; gap: 8px; align-items: center;"><span style="font-family: var(--rd-font-mono); font-size: 9px; color: var(--rd-blue-03); border: 1px solid #234251; border-radius: 4px; padding: 3px 5px; flex: none;">CDP</span><div style="min-width:0;"><div style="font-size: 12px; font-weight: 500; line-height: 1.15;">Adobe Real-Time CDP</div><div style="font-size: 10px; color: var(--rd-dusk-05);">Unified guest profiles</div></div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 8px 10px; display: flex; gap: 8px; align-items: center;"><span style="font-family: var(--rd-font-mono); font-size: 9px; color: var(--rd-blue-03); border: 1px solid #234251; border-radius: 4px; padding: 3px 5px; flex: none;">SNOW</span><div style="min-width:0;"><div style="font-size: 12px; font-weight: 500; line-height: 1.15;">Snowflake</div><div style="font-size: 10px; color: var(--rd-dusk-05);">Loyalty 360 / order history</div></div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 8px 10px; display: flex; gap: 8px; align-items: center;"><span style="font-family: var(--rd-font-mono); font-size: 9px; color: var(--rd-blue-03); border: 1px solid #234251; border-radius: 4px; padding: 3px 5px; flex: none;">PG</span><div style="min-width:0;"><div style="font-size: 12px; font-weight: 500; line-height: 1.15;">Oracle / Postgres</div><div style="font-size: 10px; color: var(--rd-dusk-05);">Commerce + product catalog</div></div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 8px 10px; display: flex; gap: 8px; align-items: center;"><span style="font-family: var(--rd-font-mono); font-size: 9px; color: var(--rd-blue-03); border: 1px solid #234251; border-radius: 4px; padding: 3px 5px; flex: none;">DBX</span><div style="min-width:0;"><div style="font-size: 12px; font-weight: 500; line-height: 1.15;">Databricks</div><div style="font-size: 10px; color: var(--rd-dusk-05);">Beauty Graph / ML features</div></div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 8px 10px; display: flex; gap: 8px; align-items: center;"><span style="font-family: var(--rd-font-mono); font-size: 9px; color: var(--rd-blue-03); border: 1px solid #234251; border-radius: 4px; padding: 3px 5px; flex: none;">KFK</span><div style="min-width:0;"><div style="font-size: 12px; font-weight: 500; line-height: 1.15;">Kafka</div><div style="font-size: 10px; color: var(--rd-dusk-05);">Live behavioral telemetry</div></div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 8px 10px; display: flex; gap: 8px; align-items: center;"><span style="font-family: var(--rd-font-mono); font-size: 9px; color: var(--rd-blue-03); border: 1px solid #234251; border-radius: 4px; padding: 3px 5px; flex: none;">OMS</span><div style="min-width:0;"><div style="font-size: 12px; font-weight: 500; line-height: 1.15;">OMS / Fulfilment</div><div style="font-size: 10px; color: var(--rd-dusk-05);">Order status, shipping + carrier events</div></div></div>
+          </div>
+
+          <div class="arch-arrow">→</div>
+
+          <!-- Col: Ingest -->
+          <div class="arch-col" style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 7px; border-top: 2px solid var(--rd-purple-04); padding-top: 8px;">
+            <span style="font-family: var(--rd-font-mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rd-purple-04);">Ingest Layer</span>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 10px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">CDC Pipelines</div><div style="font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.35; margin-top: 3px;">Real-time CDC, sub-second sync, declarative transformation pipelines, proactive data staging</div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 10px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Feature Pipelines</div><div style="font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.35; margin-top: 3px;">Feature engineering and ingestion from the Beauty Graph</div></div>
+          </div>
+
+          <div class="arch-arrow">→</div>
+
+          <!-- Col: Context Tier -->
+          <div class="arch-col" style="flex: 1.05; min-width: 0; display: flex; flex-direction: column; gap: 7px; border-top: 2px solid var(--rd-yellow-05); padding-top: 8px;">
+            <span style="font-family: var(--rd-font-mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rd-yellow-05);">Context Tier · Operational 360</span>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 9px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Hot Store</div><div style="font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.3; margin-top: 2px;">In-memory, sub-ms, live session signals</div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 9px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Warm Store</div><div style="font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.3; margin-top: 2px;">Full guest history, embeddings</div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 9px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Feature Store</div><div style="font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.3; margin-top: 2px;">ML features, train/serve parity</div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 9px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Order State</div><div style="font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.3; margin-top: 2px;">Live order + fulfilment tracking</div></div>
+            <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 1px;">
+              <span style="font-family: var(--rd-font-mono); font-size: 9px; color: var(--rd-dusk-04); background: #13262F; border-radius: 3px; padding: 3px 6px;">JSON Profiles</span>
+              <span style="font-family: var(--rd-font-mono); font-size: 9px; color: var(--rd-dusk-04); background: #13262F; border-radius: 3px; padding: 3px 6px;">Time Series</span>
+              <span style="font-family: var(--rd-font-mono); font-size: 9px; color: var(--rd-dusk-04); background: #13262F; border-radius: 3px; padding: 3px 6px;">Streams</span>
+              <span style="font-family: var(--rd-font-mono); font-size: 9px; color: var(--rd-dusk-04); background: #13262F; border-radius: 3px; padding: 3px 6px;">Vectors</span>
+              <span style="font-family: var(--rd-font-mono); font-size: 9px; color: var(--rd-dusk-04); background: #13262F; border-radius: 3px; padding: 3px 6px;">Session State</span>
+            </div>
+          </div>
+
+          <div class="arch-arrow">→</div>
+
+          <!-- Col: Decision Engine -->
+          <div class="arch-col" style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 7px; border-top: 2px solid var(--rd-hyper-05); padding-top: 8px;">
+            <span style="font-family: var(--rd-font-mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rd-hyper-04);">Decision Engine</span>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 9px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Rules / Policy</div><div style="font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.3; margin-top: 2px;">Inventory, eligibility, frequency caps</div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 9px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">ML Ranker</div><div style="font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.3; margin-top: 2px;">Beauty Graph + LTV weighting</div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 9px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Vector Search</div><div style="font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.3; margin-top: 2px;">Semantic product matching</div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 9px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Search Index</div><div style="font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.3; margin-top: 2px;">Full-text + faceted navigation</div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 9px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Semantic Cache</div><div style="font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.3; margin-top: 2px;">GenAI assistant acceleration</div></div>
+          </div>
+
+          <div class="arch-arrow">→</div>
+
+          <!-- Col: Output -->
+          <div class="arch-col" style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 7px; border-top: 2px solid var(--rd-dusk-04); padding-top: 8px;">
+            <span style="font-family: var(--rd-font-mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rd-dusk-04);">Application Features</span>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 8px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Search Navigation</div><div style="font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.25; margin-top: 2px;">Instant, typo-tolerant results</div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 8px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Shopping Basket</div><div style="font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.25; margin-top: 2px;">Live cart + session state</div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 8px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Product Recommendations</div><div style="font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.25; margin-top: 2px;">Personalized "For You" grid</div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 8px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Loyalty Page</div><div style="font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.25; margin-top: 2px;">Real-time points + birthday</div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 8px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Order Tracking</div><div style="font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.25; margin-top: 2px;">Live order + fulfilment status</div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 8px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Support Chatbot</div><div style="font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.25; margin-top: 2px;">GenAI assistant</div></div>
+          </div>
+        </div>
+
+        <!-- Learn loop -->
+        <div style="flex: none; margin-top: 14px; display: flex; align-items: center; gap: 12px; background: #0A1A22; border: 1px dashed #2D4754; border-radius: 8px; padding: 9px 16px;">
+          <span style="font-size: 16px; color: var(--rd-yellow-05);">↺</span>
+          <span style="font-size: 12px; color: var(--rd-dusk-03); line-height: 1.3;"><strong style="color: #fff; font-weight: 500;">Learn:</strong> Decision exhaust → Kafka → Databricks training → updated models → redeployed to the context tier</span>
+        </div>
+
+        <!-- Stats -->
+        <div style="flex: none; margin-top: 12px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+          <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 11px 16px; display: flex; align-items: baseline; justify-content: space-between;"><span style="font-family: var(--rd-font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--rd-dusk-05);">Decisioning latency</span><span style="font-weight: 500; font-size: 22px; color: var(--rd-yellow-05); white-space: nowrap;">~100 ms</span></div>
+          <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 11px 16px; display: flex; align-items: baseline; justify-content: space-between;"><span style="font-family: var(--rd-font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--rd-dusk-05);">Personalization SLA</span><span style="font-weight: 500; font-size: 22px; color: var(--rd-yellow-05); white-space: nowrap;">&lt;10 ms target</span></div>
+          <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 11px 16px; display: flex; align-items: baseline; justify-content: space-between;"><span style="font-family: var(--rd-font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--rd-dusk-05);">Peak-traffic risk</span><span style="font-weight: 500; font-size: 20px; color: var(--rd-hyper-04); white-space: nowrap;">SLA under pressure</span></div>
+        </div>
+      </section>
+
+      <!-- ===================== STAGE 2 · SESSION START ===================== -->
+      <section data-screen-label="02 Session Start" style="position: absolute; inset: 0; display: {{ d1 }}; flex-direction: column;">
+        <div style="display: flex; flex-direction: column; gap: 6px; flex: none;">
+          <span style="font-family: var(--rd-font-mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--rd-hyper-04);">Stage 2 · Session start</span>
+          <h2 style="margin: 0; font-weight: 500; font-size: 38px; line-height: 1.04; letter-spacing: -0.02em;">Sarah opens the L'Oréal app.</h2>
+          <p style="margin: 2px 0 0; font-size: 15px; line-height: 1.5; color: var(--rd-dusk-04); max-width: 1040px;">A session event fires the moment Sarah authenticates. Redis identifies a Diamond loyalty member, pulls her full guest profile, and activates the in-session personalization pipeline before the home screen renders.</p>
+        </div>
+
+        <div style="flex: 1; min-height: 0; display: grid; grid-template-columns: 1.1fr 1fr; gap: 24px; margin-top: 22px;">
+          <!-- Guest session event -->
+          <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 10px; padding: 22px 24px; display: flex; flex-direction: column;">
+            <span style="font-family: var(--rd-font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rd-dusk-05);">Guest session event</span>
+            <div style="display: flex; align-items: center; gap: 14px; margin-top: 16px;">
+              <div style="width: 52px; height: 52px; border-radius: 999px; background: var(--rd-hyper-05); display: flex; align-items: center; justify-content: center; font-weight: 500; font-size: 18px; flex: none;">SM</div>
+              <div style="min-width: 0;">
+                <div style="font-size: 19px; font-weight: 500;">Sarah Martinez</div>
+                <div style="font-size: 12px; color: var(--rd-dusk-04);">Rewards member since 2019 · 14 visits last 90 days</div>
+              </div>
+              <span style="margin-left: auto; font-family: var(--rd-font-mono); font-size: 11px; letter-spacing: 0.08em; background: var(--rd-yellow-05); color: var(--rd-midnight-base); padding: 5px 10px; border-radius: 3px; align-self: flex-start;">DIAMOND</span>
+            </div>
+            <div style="margin-top: 18px; display: flex; flex-direction: column; gap: 0; border-top: 1px solid #16303C;">
+              <div style="display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid #16303C;"><span style="font-size: 13px; color: var(--rd-dusk-05);">Event</span><span style="font-family: var(--rd-font-mono); font-size: 13px;">app_session_start</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid #16303C;"><span style="font-size: 13px; color: var(--rd-dusk-05);">Time</span><span style="font-size: 13px;">7:18 PM (prime mobile window)</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid #16303C;"><span style="font-size: 13px; color: var(--rd-dusk-05);">Device</span><span style="font-size: 13px;">iOS app v9.4 / iPhone 16</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid #16303C;"><span style="font-size: 13px; color: var(--rd-dusk-05);">Loyalty balance</span><span style="font-size: 13px;">2,840 pts ($28 reward ready)</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid #16303C;"><span style="font-size: 13px; color: var(--rd-dusk-05);">Trailing 12mo spend</span><span style="font-size: 13px;">$1,247 (top 8% of base)</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid #16303C;"><span style="font-size: 13px; color: var(--rd-dusk-05);">Birthday flag</span><span style="font-size: 13px; color: var(--rd-yellow-05);">14 days out</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 9px 0;"><span style="font-size: 13px; color: var(--rd-dusk-05);">Last session</span><span style="font-size: 13px;">3 days ago — browsed mascara, no purchase</span></div>
+            </div>
+          </div>
+          <!-- Why this matters -->
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <span style="font-family: var(--rd-font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rd-hyper-04);">Why this matters</span>
+            <p style="margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--rd-dusk-03);">Sarah is one of <strong style="color: #fff; font-weight: 500;">46M+ loyalty members</strong> who drive <strong style="color: #fff; font-weight: 500;">95% of L'Oréal sales</strong>. Diamond members visit 3x more often and spend 5x more than the average guest.</p>
+            <p style="margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--rd-dusk-03);">Her last session ended <strong style="color: #fff; font-weight: 500;">without a purchase</strong>. The in-session signal — mascara browsing, abandoned at PDP — is the most predictive data L'Oréal has, and it is only useful if it is reflected <strong style="color: var(--rd-yellow-05); font-weight: 500;">right now</strong>, not on tomorrow's email.</p>
+            <div style="background: #0C1F29; border-left: 3px solid var(--rd-hyper-05); border-radius: 0 8px 8px 0; padding: 12px 16px;"><span style="font-size: 13.5px; line-height: 1.5; color: var(--rd-dusk-02);"><strong style="color: #fff; font-weight: 500;">The opportunity:</strong> recognize the in-session intent, cross it with her Beauty Graph affinity, and surface a complete eye routine in the moment — not after the session ends.</span></div>
+            <div style="background: #1A0E10; border: 1px solid #3A1B1B; border-radius: 8px; padding: 12px 16px;"><span style="font-size: 13.5px; line-height: 1.5; color: var(--rd-dusk-03);"><strong style="color: var(--rd-hyper-04); font-weight: 500;">Without Redis:</strong> Sarah sees the same generic home screen as everyone else. The mascara signal sits in a batch queue, she closes the app, and the moment is gone.</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== STAGE 3 · INGEST ===================== -->
+      <section data-screen-label="03 Ingest" style="position: absolute; inset: 0; display: {{ d2 }}; flex-direction: column;">
+        <div style="display: flex; flex-direction: column; gap: 6px; flex: none;">
+          <span style="font-family: var(--rd-font-mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--rd-hyper-04);">Stage 3 · Ingest</span>
+          <h2 style="margin: 0; font-weight: 500; font-size: 38px; line-height: 1.04; letter-spacing: -0.02em;">L'Oréal's data sources flow into Redis.</h2>
+          <p style="margin: 2px 0 0; font-size: 15px; line-height: 1.5; color: var(--rd-dusk-04); max-width: 1040px;">Redis Data Integration continuously syncs changes from Adobe CDP, the commerce platform, and the warehouse. FeatureForm orchestrates Beauty Graph features from Databricks. Batch profiles, transactional state, and live behavioral events converge in one low-latency layer.</p>
+        </div>
+
+        <div style="flex: 1; min-height: 0; display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px; margin-top: 20px;">
+          <div style="display: flex; flex-direction: column; gap: 9px;">
+            <span style="font-family: var(--rd-font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rd-dusk-05);">Source systems → Redis</span>
+            <div style="display: flex; align-items: center; gap: 14px; background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 11px 16px;"><span style="font-family: var(--rd-font-mono); font-size: 10px; color: var(--rd-blue-03); border: 1px solid #234251; border-radius: 4px; padding: 4px 7px; flex: none; width: 52px; text-align: center;">CDP</span><div style="flex: 1; min-width: 0;"><div style="font-size: 14px; font-weight: 500;">Adobe Real-Time CDP · Unified guest profile</div><div style="font-size: 11.5px; color: var(--rd-dusk-05);">46M+ profiles · motivation segments · consent state · cross-channel identity stitching</div></div><span style="color: var(--rd-hyper-04); font-size: 18px;">→</span></div>
+            <div style="display: flex; align-items: center; gap: 14px; background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 11px 16px;"><span style="font-family: var(--rd-font-mono); font-size: 10px; color: var(--rd-blue-03); border: 1px solid #234251; border-radius: 4px; padding: 4px 7px; flex: none; width: 52px; text-align: center;">SNOW</span><div style="flex: 1; min-width: 0;"><div style="font-size: 14px; font-weight: 500;">Snowflake · Loyalty 360 warehouse</div><div style="font-size: 11.5px; color: var(--rd-dusk-05);">5+ years order history · tier state · points balance · replenishment cycles · LTV</div></div><span style="color: var(--rd-hyper-04); font-size: 18px;">→</span></div>
+            <div style="display: flex; align-items: center; gap: 14px; background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 11px 16px;"><span style="font-family: var(--rd-font-mono); font-size: 10px; color: var(--rd-blue-03); border: 1px solid #234251; border-radius: 4px; padding: 4px 7px; flex: none; width: 52px; text-align: center;">PG</span><div style="flex: 1; min-width: 0;"><div style="font-size: 14px; font-weight: 500;">Oracle / Postgres · Commerce + catalog</div><div style="font-size: 11.5px; color: var(--rd-dusk-05);">25,000+ SKUs · 600+ brands · real-time inventory · pricing · promo eligibility</div></div><span style="color: var(--rd-hyper-04); font-size: 18px;">→</span></div>
+            <div style="display: flex; align-items: center; gap: 14px; background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 11px 16px;"><span style="font-family: var(--rd-font-mono); font-size: 10px; color: var(--rd-blue-03); border: 1px solid #234251; border-radius: 4px; padding: 4px 7px; flex: none; width: 52px; text-align: center;">DBX</span><div style="flex: 1; min-width: 0;"><div style="font-size: 14px; font-weight: 500;">Databricks · Beauty Graph ML pipeline</div><div style="font-size: 11.5px; color: var(--rd-dusk-05);">Guest embeddings · shade / undertone affinity · routine completion · GLAMlab history</div></div><span style="color: var(--rd-hyper-04); font-size: 18px;">→</span></div>
+            <div style="display: flex; align-items: center; gap: 14px; background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 11px 16px;"><span style="font-family: var(--rd-font-mono); font-size: 10px; color: var(--rd-blue-03); border: 1px solid #234251; border-radius: 4px; padding: 4px 7px; flex: none; width: 52px; text-align: center;">KFK</span><div style="flex: 1; min-width: 0;"><div style="font-size: 14px; font-weight: 500;">Kafka · Live behavioral stream</div><div style="font-size: 11.5px; color: var(--rd-dusk-05);">Page views · search queries · PDP dwell · add-to-cart · filter selections · launches</div></div><span style="color: var(--rd-hyper-04); font-size: 18px;">→</span></div>
+          </div>
+          <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 10px; padding: 18px 20px; display: flex; flex-direction: column;">
+            <span style="font-family: var(--rd-font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rd-hyper-04);">RDI pipeline status</span>
+            <div style="margin-top: 10px; display: flex; flex-direction: column;">
+              <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #16303C;"><span style="font-size: 13px; color: var(--rd-dusk-04);">CDC mode</span><span style="font-family: var(--rd-font-mono); font-size: 12px; color: var(--rd-yellow-05);">Real-time</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #16303C;"><span style="font-size: 13px; color: var(--rd-dusk-04);">Adobe CDP sync</span><span style="font-family: var(--rd-font-mono); font-size: 12px; color: var(--rd-yellow-05);">Streaming</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #16303C;"><span style="font-size: 13px; color: var(--rd-dusk-04);">Snowflake sync</span><span style="font-family: var(--rd-font-mono); font-size: 12px; color: var(--rd-yellow-05);">Streaming</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #16303C;"><span style="font-size: 13px; color: var(--rd-dusk-04);">Postgres CDC</span><span style="font-family: var(--rd-font-mono); font-size: 12px; color: var(--rd-yellow-05);">Sub-second</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #16303C;"><span style="font-size: 13px; color: var(--rd-dusk-04);">Databricks sync</span><span style="font-family: var(--rd-font-mono); font-size: 12px; color: var(--rd-dusk-03);">4h refresh</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #16303C;"><span style="font-size: 13px; color: var(--rd-dusk-04);">Kafka lag</span><span style="font-family: var(--rd-font-mono); font-size: 12px; color: var(--rd-yellow-05);">&lt;80ms</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 0;"><span style="font-size: 13px; color: var(--rd-dusk-04);">Cache misses</span><span style="font-family: var(--rd-font-mono); font-size: 12px; color: var(--rd-yellow-05);">0</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== STAGE 4 · CONTEXT ===================== -->
+      <section data-screen-label="04 Context" style="position: absolute; inset: 0; display: {{ d3 }}; flex-direction: column;">
+        <div style="display: flex; flex-direction: column; gap: 6px; flex: none;">
+          <span style="font-family: var(--rd-font-mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--rd-hyper-04);">Stage 4 · Context assembly</span>
+          <h2 style="margin: 0; font-weight: 500; font-size: 38px; line-height: 1.04; letter-spacing: -0.02em;">Sarah's Beauty Graph + in-session signals.</h2>
+          <p style="margin: 2px 0 0; font-size: 15px; line-height: 1.5; color: var(--rd-dusk-04); max-width: 1040px;">Redis assembles the full picture: who Sarah is, what she has bought, what she is browsing right now, and where she sits in her replenishment cycle. Historical Beauty Graph affinity meets the live in-session intent signal that fired three taps ago.</p>
+        </div>
+
+        <div style="flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 20px;">
+          <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 10px; padding: 18px 20px; display: flex; flex-direction: column;">
+            <span style="font-family: var(--rd-font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rd-dusk-05);">Guest 360 · Beauty Graph</span>
+            <div style="margin-top: 14px; font-size: 12px; color: var(--rd-dusk-04); margin-bottom: 6px;">Category affinity distribution</div>
+            <div data-anim="bars" style="display: flex; height: 14px; border-radius: 4px; overflow: hidden; gap: 2px;">
+              <div style="width: 38%; background: var(--rd-hyper-05);"></div>
+              <div style="width: 24%; background: var(--rd-purple-04);"></div>
+              <div style="width: 18%; background: var(--rd-blue-03);"></div>
+              <div style="width: 12%; background: var(--rd-yellow-05);"></div>
+              <div style="width: 8%; background: var(--rd-dusk-05);"></div>
+            </div>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-top: 8px; font-size: 11px; color: var(--rd-dusk-04);">
+              <span><span style="color: var(--rd-hyper-04);">●</span> Eye 38%</span>
+              <span><span style="color: var(--rd-purple-04);">●</span> Skincare 24%</span>
+              <span><span style="color: var(--rd-blue-03);">●</span> Lip 18%</span>
+              <span><span style="color: var(--rd-yellow-05);">●</span> Hair 12%</span>
+              <span><span style="color: var(--rd-dusk-05);">●</span> Frag 8%</span>
+            </div>
+            <div style="margin-top: 14px; display: flex; flex-direction: column;">
+              <div style="display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid #16303C;"><span style="font-size: 12.5px; color: var(--rd-dusk-05);">Top brand affinities</span><span style="font-size: 12.5px;">Tarte, Too Faced, NARS</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid #16303C;"><span style="font-size: 12.5px; color: var(--rd-dusk-05);">Skin tone / undertone</span><span style="font-size: 12.5px;">Medium / Warm (GLAMlab)</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid #16303C;"><span style="font-size: 12.5px; color: var(--rd-dusk-05);">Last purchase</span><span style="font-size: 12.5px;">Drunk Elephant Protini, 41d ago</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid #16303C;"><span style="font-size: 12.5px; color: var(--rd-dusk-05);">Replenishment due</span><span style="font-size: 12.5px; color: var(--rd-yellow-05);">Mascara: 4 days overdue</span></div>
+              <div style="display: flex; justify-content: space-between; padding: 7px 0;"><span style="font-size: 12.5px; color: var(--rd-dusk-05);">Motivation segment</span><span style="font-size: 12.5px;">Routine Refresher</span></div>
+            </div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 10px; padding: 18px 20px; display: flex; flex-direction: column;">
+              <span style="font-family: var(--rd-font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rd-hyper-04);">In-session signal · live</span>
+              <div style="margin-top: 8px; display: flex; flex-direction: column;">
+                <div style="display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid #16303C;"><span style="font-size: 12.5px; color: var(--rd-dusk-05);">Search query (3s ago)</span><span style="font-family: var(--rd-font-mono); font-size: 12px;">"tubing mascara waterproof"</span></div>
+                <div style="display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid #16303C;"><span style="font-size: 12.5px; color: var(--rd-dusk-05);">PDP viewed (1s ago)</span><span style="font-size: 12.5px;">Tarte Maneater Mascara</span></div>
+                <div style="display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid #16303C;"><span style="font-size: 12.5px; color: var(--rd-dusk-05);">Dwell time on PDP</span><span style="font-size: 12.5px; color: var(--rd-yellow-05);">38 sec (high intent)</span></div>
+                <div style="display: flex; justify-content: space-between; padding: 7px 0; border-bottom: 1px solid #16303C;"><span style="font-size: 12.5px; color: var(--rd-dusk-05);">Filter applied</span><span style="font-size: 12.5px;">Cruelty-free, $20-$30</span></div>
+                <div style="display: flex; justify-content: space-between; padding: 7px 0;"><span style="font-size: 12.5px; color: var(--rd-dusk-05);">Trending in eye (24h)</span><span style="font-size: 12.5px;">+62% Tarte Maneater searches</span></div>
+              </div>
+            </div>
+            <div style="background: #0C1F29; border-left: 3px solid var(--rd-yellow-05); border-radius: 0 8px 8px 0; padding: 13px 16px;"><span style="font-size: 13.5px; line-height: 1.5; color: var(--rd-dusk-02);"><strong style="color: #fff; font-weight: 500;">Context signal:</strong> Sarah is mid-decision on mascara right now. Her Beauty Graph says Tarte is her top brand, and she is overdue for replenishment. Surface a complete eye routine, not just mascara, while she is still in the moment.</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== STAGE 5 · FEATURE SERVING ===================== -->
+      <section data-screen-label="05 Feature Serving" style="position: absolute; inset: 0; display: {{ d4 }}; flex-direction: column;">
+        <div style="display: flex; flex-direction: column; gap: 6px; flex: none;">
+          <span style="font-family: var(--rd-font-mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--rd-hyper-04);">Stage 5 · Feature serving</span>
+          <h2 style="margin: 0; font-weight: 500; font-size: 38px; line-height: 1.04; letter-spacing: -0.02em;">Features hydrated for the ranking model.</h2>
+          <p style="margin: 2px 0 0; font-size: 15px; line-height: 1.5; color: var(--rd-dusk-04); max-width: 1040px;">FeatureForm pulls every signal the ML ranker needs into a single vector. Beauty Graph features, product features, and live in-session features merge in sub-millisecond — no feature lookups during scoring.</p>
+        </div>
+
+        <div style="flex: 1; min-height: 0; display: grid; grid-template-columns: 1.7fr 1fr; gap: 24px; margin-top: 20px;">
+          <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 11px 16px;"><div style="min-width: 0;"><div style="font-family: var(--rd-font-mono); font-size: 12.5px; color: var(--rd-yellow-05);">GUEST_CATEGORY_VECTOR</div><div style="font-size: 11.5px; color: var(--rd-dusk-05);">Lifetime category affinity, weighted to last 90 days</div></div><div style="text-align: right; flex: none;"><div style="font-family: var(--rd-font-mono); font-size: 12px;">[0.38, 0.24, 0.18, …]</div><div style="font-family: var(--rd-font-mono); font-size: 11px; color: var(--rd-dusk-05);">0.6 ms</div></div></div>
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 11px 16px;"><div style="min-width: 0;"><div style="font-family: var(--rd-font-mono); font-size: 12.5px; color: var(--rd-yellow-05);">GUEST_EMBEDDING_512D</div><div style="font-size: 11.5px; color: var(--rd-dusk-05);">Databricks-trained Beauty Graph identity embedding</div></div><div style="text-align: right; flex: none;"><div style="font-family: var(--rd-font-mono); font-size: 12px;">[0.74, -0.29, 0.58, …]</div><div style="font-family: var(--rd-font-mono); font-size: 11px; color: var(--rd-dusk-05);">0.4 ms</div></div></div>
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 11px 16px;"><div style="min-width: 0;"><div style="font-family: var(--rd-font-mono); font-size: 12.5px; color: var(--rd-yellow-05);">IN_SESSION_INTENT</div><div style="font-size: 11.5px; color: var(--rd-dusk-05);">Live intent from search + PDP dwell + filter</div></div><div style="text-align: right; flex: none;"><div style="font-family: var(--rd-font-mono); font-size: 12px;">eye_mascara_high_intent</div><div style="font-family: var(--rd-font-mono); font-size: 11px; color: var(--rd-dusk-05);">0.2 ms</div></div></div>
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 11px 16px;"><div style="min-width: 0;"><div style="font-family: var(--rd-font-mono); font-size: 12.5px; color: var(--rd-yellow-05);">REPLENISHMENT_OVERDUE_DAYS</div><div style="font-size: 11.5px; color: var(--rd-dusk-05);">Predicted replenishment cycle vs last purchase</div></div><div style="text-align: right; flex: none;"><div style="font-family: var(--rd-font-mono); font-size: 12px;">+4 (mascara)</div><div style="font-family: var(--rd-font-mono); font-size: 11px; color: var(--rd-dusk-05);">0.3 ms</div></div></div>
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 11px 16px;"><div style="min-width: 0;"><div style="font-family: var(--rd-font-mono); font-size: 12.5px; color: var(--rd-yellow-05);">LOYALTY_TIER_LTV_SCORE</div><div style="font-size: 11.5px; color: var(--rd-dusk-05);">Diamond multiplier + trailing 12mo LTV percentile</div></div><div style="text-align: right; flex: none;"><div style="font-family: var(--rd-font-mono); font-size: 12px;">0.92 (top 8%)</div><div style="font-family: var(--rd-font-mono); font-size: 11px; color: var(--rd-dusk-05);">0.3 ms</div></div></div>
+            <div style="display: flex; align-items: center; justify-content: space-between; gap: 16px; background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 11px 16px;"><div style="min-width: 0;"><div style="font-family: var(--rd-font-mono); font-size: 12.5px; color: var(--rd-yellow-05);">BIRTHDAY_PROXIMITY_BIAS</div><div style="font-size: 11.5px; color: var(--rd-dusk-05);">Birthday window flag, drives premium gift bias</div></div><div style="text-align: right; flex: none;"><div style="font-family: var(--rd-font-mono); font-size: 12px;">+0.28 (14 days)</div><div style="font-family: var(--rd-font-mono); font-size: 11px; color: var(--rd-dusk-05);">0.3 ms</div></div></div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <span style="font-family: var(--rd-font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rd-dusk-05);">Feature serving performance</span>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 14px 18px; display: flex; align-items: baseline; justify-content: space-between;"><span style="font-size: 13px; color: var(--rd-dusk-04);">Total features hydrated</span><span style="font-weight: 500; font-size: 30px; color: var(--rd-yellow-05);">214</span></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 14px 18px; display: flex; align-items: baseline; justify-content: space-between;"><span style="font-size: 13px; color: var(--rd-dusk-04);">P99 lookup latency</span><span style="font-weight: 500; font-size: 30px; color: var(--rd-yellow-05);">2.3 ms</span></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 14px 18px; display: flex; align-items: baseline; justify-content: space-between;"><span style="font-size: 13px; color: var(--rd-dusk-04);">Online / offline parity</span><span style="font-weight: 500; font-size: 30px; color: var(--rd-yellow-05);">100%</span></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 14px 18px; display: flex; align-items: baseline; justify-content: space-between;"><span style="font-size: 13px; color: var(--rd-dusk-04);">Cache hit rate</span><span style="font-weight: 500; font-size: 30px; color: var(--rd-yellow-05);">99.7%</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== STAGE 6 · RANKING ===================== -->
+      <section data-screen-label="06 Ranking" style="position: absolute; inset: 0; display: {{ d5 }}; flex-direction: column;">
+        <div style="display: flex; flex-direction: column; gap: 6px; flex: none;">
+          <span style="font-family: var(--rd-font-mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--rd-hyper-04);">Stage 6 · Product ranking</span>
+          <h2 style="margin: 0; font-weight: 500; font-size: 38px; line-height: 1.04; letter-spacing: -0.02em;">Products scored and ranked in real time.</h2>
+          <p style="margin: 2px 0 0; font-size: 15px; line-height: 1.5; color: var(--rd-dusk-04); max-width: 1040px;">Vector Search matches Sarah's Beauty Graph embedding to product embeddings across the full catalog. The in-session intent signal boosts mascara and complementary eye products; already-owned and out-of-stock SKUs are suppressed.</p>
+        </div>
+
+        <div style="flex: none; display: flex; gap: 12px; margin-top: 18px;">
+          <div style="flex: 1; background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 10px 14px;"><span style="font-family: var(--rd-font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--rd-dusk-05);">Active SKUs</span><div style="font-weight: 500; font-size: 18px;">25,000+</div></div>
+          <div style="flex: 1; background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 10px 14px;"><span style="font-family: var(--rd-font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--rd-dusk-05);">Eye-category matches</span><div style="font-weight: 500; font-size: 18px;">847</div></div>
+          <div style="flex: 1; background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 10px 14px;"><span style="font-family: var(--rd-font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--rd-dusk-05);">Suppressed (owned + OOS)</span><div style="font-weight: 500; font-size: 18px;">142</div></div>
+          <div style="flex: 1; background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 10px 14px;"><span style="font-family: var(--rd-font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--rd-dusk-05);">Ranked for surface</span><div style="font-weight: 500; font-size: 18px;">Top 18</div></div>
+        </div>
+
+        <div style="flex: 1; min-height: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px;">
+          <div style="background: #0C1F29; border: 1px solid var(--rd-hyper-05); border-radius: 10px; padding: 18px 20px; display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-family: var(--rd-font-mono); font-size: 11px; color: var(--rd-hyper-04);">#1 HERO · "FOR YOU"</span><span style="font-family: var(--rd-font-mono); font-size: 11px; color: var(--rd-dusk-05);">Tarte · Eye</span></div>
+            <div style="font-size: 19px; font-weight: 500; margin-top: 12px;">Tarte Maneater Mascara</div>
+            <div style="font-size: 12.5px; color: var(--rd-dusk-04); margin-top: 4px;">$26 · Tubing waterproof · 96% match</div>
+            <p style="font-size: 12.5px; line-height: 1.5; color: var(--rd-dusk-04); margin: 14px 0 0;">Exact PDP Sarah just dwelled on. Top brand affinity, fits her filter, replenishment overdue. Highest LTV unlock.</p>
+            <div style="margin-top: auto; padding-top: 14px; display: flex; align-items: center; justify-content: space-between;"><span style="font-size: 11px; color: var(--rd-dusk-05);">Relevance</span><span style="font-family: var(--rd-font-mono); font-weight: 500; font-size: 18px; color: var(--rd-yellow-05);">96%</span></div>
+          </div>
+          <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 10px; padding: 18px 20px; display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-family: var(--rd-font-mono); font-size: 11px; color: var(--rd-dusk-04);">#2 COMPLETE THE LOOK</span><span style="font-family: var(--rd-font-mono); font-size: 11px; color: var(--rd-dusk-05);">Tarte · Eye</span></div>
+            <div style="font-size: 19px; font-weight: 500; margin-top: 12px;">Tartelette In Bloom Palette</div>
+            <div style="font-size: 12.5px; color: var(--rd-dusk-04); margin-top: 4px;">$41 · 12 shades · 89% match</div>
+            <p style="font-size: 12.5px; line-height: 1.5; color: var(--rd-dusk-04); margin: 14px 0 0;">Pairs with Maneater. Warm undertones from GLAMlab. Cross-sell driver — bundle lift +34%.</p>
+            <div style="margin-top: auto; padding-top: 14px; display: flex; align-items: center; justify-content: space-between;"><span style="font-size: 11px; color: var(--rd-dusk-05);">Relevance</span><span style="font-family: var(--rd-font-mono); font-weight: 500; font-size: 18px; color: var(--rd-dusk-02);">89%</span></div>
+          </div>
+          <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 10px; padding: 18px 20px; display: flex; flex-direction: column;">
+            <div style="display: flex; justify-content: space-between; align-items: center;"><span style="font-family: var(--rd-font-mono); font-size: 11px; color: var(--rd-dusk-04);">#3 ROUTINE BUILDER</span><span style="font-family: var(--rd-font-mono); font-size: 11px; color: var(--rd-dusk-05);">Too Faced · Eye</span></div>
+            <div style="font-size: 19px; font-weight: 500; margin-top: 12px;">Better Than Sex Primer</div>
+            <div style="font-size: 12.5px; color: var(--rd-dusk-04); margin-top: 4px;">$25 · Lash primer · 84% match</div>
+            <p style="font-size: 12.5px; line-height: 1.5; color: var(--rd-dusk-04); margin: 14px 0 0;">Routine completion play. Top brand #2 for Sarah. Increases mascara performance, builds the full eye routine.</p>
+            <div style="margin-top: auto; padding-top: 14px; display: flex; align-items: center; justify-content: space-between;"><span style="font-size: 11px; color: var(--rd-dusk-05);">Relevance</span><span style="font-family: var(--rd-font-mono); font-weight: 500; font-size: 18px; color: var(--rd-dusk-02);">84%</span></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== STAGE 7 · OUTCOME ===================== -->
+      <section data-screen-label="07 Outcome" style="position: absolute; inset: 0; display: {{ d6 }}; flex-direction: column;">
+        <div style="display: flex; flex-direction: column; gap: 6px; flex: none;">
+          <span style="font-family: var(--rd-font-mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--rd-hyper-04);">Stage 7 · Outcome</span>
+          <h2 style="margin: 0; font-weight: 500; font-size: 38px; line-height: 1.04; letter-spacing: -0.02em;">Sarah's app home, two ways.</h2>
+          <p style="margin: 2px 0 0; font-size: 15px; line-height: 1.5; color: var(--rd-dusk-04); max-width: 1040px;">Same Diamond member, same moment, two very different experiences. The Redis-personalized screen reflects what Sarah was looking at three taps ago, builds a complete eye routine, and recognizes her loyalty status in real time.</p>
+        </div>
+
+        <div style="flex: 1; min-height: 0; display: flex; align-items: flex-start; justify-content: space-around; gap: 40px; margin-top: 10px;">
+          <!-- Generic -->
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+            <span style="font-family: var(--rd-font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--rd-dusk-05);">Generic home screen (today)</span>
+            <div style="width: 300px; height: 488px; background: #0B0B0E; border: 6px solid #18272E; border-radius: 38px; overflow: hidden; display: flex; flex-direction: column; padding: 18px;">
+              <div style="display: flex; justify-content: space-between; align-items: center; font-family: var(--rd-font-mono); font-size: 12px; color: #C7D0D6;"><span>9:41</span><span style="width: 17px; height: 10px; border: 1px solid #5C707A; border-radius: 2px; position: relative; display: inline-block;"><span style="position: absolute; left: 1.5px; top: 1.5px; bottom: 1.5px; width: 62%; background: #9AE66E; border-radius: 1px;"></span></span></div>
+              <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 10px;"><span style="font-weight: 600; font-size: 25px; letter-spacing: 0.01em; color: #6F7E8A;">L'ORÉAL</span><span style="font-family: var(--rd-font-mono); font-size: 10px; letter-spacing: 0.12em; color: #5C707A;">WELCOME BACK</span></div>
+              <div style="height: 1px; background: #1B2930; margin: 12px 0;"></div>
+              <div style="background: linear-gradient(180deg, #16181D, #0B0B0E); border-radius: 10px; padding: 13px 14px 14px;"><div style="font-family: var(--rd-font-mono); font-size: 9.5px; letter-spacing: 0.14em; color: #5C707A;">FEATURED</div><div style="font-weight: 600; font-size: 21px; color: #E4E7EA; margin-top: 5px; letter-spacing: -0.01em;">Spring Beauty Sale</div><div style="font-size: 12px; color: #7E8A92; margin-top: 4px;">Save up to 50% on select brands</div><div style="display: inline-block; margin-top: 12px; border: 1px solid #3A4750; color: #9FB0B8; font-family: var(--rd-font-mono); font-size: 10px; letter-spacing: 0.12em; padding: 8px 18px; border-radius: 999px;">SHOP NOW</div></div>
+              <div style="font-family: var(--rd-font-mono); font-size: 10px; letter-spacing: 0.14em; color: #5C707A; margin-top: 14px;">TRENDING IN BEAUTY</div>
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 9px;">
+                <div style="background: #2E2422; border-radius: 11px; padding: 11px; height: 82px; display: flex; flex-direction: column; justify-content: space-between;"><span style="font-weight: 600; font-size: 12px; line-height: 1.15; color: #B89A92;">Generic Foundation</span><span style="font-size: 12px; color: #B89A92;">$45</span></div>
+                <div style="background: #232E1C; border-radius: 11px; padding: 11px; height: 82px; display: flex; flex-direction: column; justify-content: space-between;"><span style="font-weight: 600; font-size: 12px; line-height: 1.15; color: #93AC78;">Hair Care Bundle</span><span style="font-size: 12px; color: #93AC78;">$32</span></div>
+                <div style="background: #25253A; border-radius: 11px; padding: 11px; height: 82px; display: flex; flex-direction: column; justify-content: space-between;"><span style="font-weight: 600; font-size: 12px; line-height: 1.15; color: #9A9AB4;">Trending Fragrance</span><span style="font-size: 12px; color: #9A9AB4;">$78</span></div>
+              </div>
+              <div style="font-family: var(--rd-font-mono); font-size: 10px; letter-spacing: 0.14em; color: #5C707A; margin-top: 13px;">FOR YOU</div>
+              <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 9px;">
+                <div style="background: #2E2E1A; border-radius: 11px; padding: 11px; height: 76px; display: flex; flex-direction: column; justify-content: space-between;"><span style="font-weight: 600; font-size: 12px; line-height: 1.15; color: #ADAD78;">Skincare Set</span><span style="font-size: 12px; color: #ADAD78;">$60</span></div>
+                <div style="background: #2E2029; border-radius: 11px; padding: 11px; height: 76px; display: flex; flex-direction: column; justify-content: space-between;"><span style="font-weight: 600; font-size: 12px; line-height: 1.15; color: #B08A99;">Lip Kit</span><span style="font-size: 12px; color: #B08A99;">$28</span></div>
+                <div style="background: #1C302C; border-radius: 11px; padding: 11px; height: 76px; display: flex; flex-direction: column; justify-content: space-between;"><span style="font-weight: 600; font-size: 12px; line-height: 1.15; color: #7AAFA5;">Brush Set</span><span style="font-size: 12px; color: #7AAFA5;">$40</span></div>
+              </div>
+            </div>
+          </div>
+          <!-- Personalized -->
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 12px;">
+            <span style="font-family: var(--rd-font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--rd-hyper-04);">Redis-personalized screen</span>
+            <div style="width: 300px; height: 488px; background: #0B0B0E; border: 4px solid #B0123C; border-radius: 38px; overflow: hidden; display: flex; flex-direction: column;">
+              <div style="padding: 18px 18px 0;">
+                <div style="display: flex; justify-content: space-between; align-items: center; font-family: var(--rd-font-mono); font-size: 12px; color: #C7D0D6;"><span>9:41</span><span style="width: 17px; height: 10px; border: 1px solid #5C707A; border-radius: 2px; position: relative; display: inline-block;"><span style="position: absolute; left: 1.5px; top: 1.5px; bottom: 1.5px; width: 62%; background: #9AE66E; border-radius: 1px;"></span></span></div>
+                <div style="display: flex; justify-content: space-between; align-items: baseline; margin-top: 10px;"><span style="font-weight: 600; font-size: 25px; color: #fff; letter-spacing: 0.01em;">L'ORÉAL</span><span style="font-family: var(--rd-font-mono); font-size: 10px; letter-spacing: 0.1em; color: #C7D0D6;">HI SARAH · <span style="color: #5BC8FF;">DIAMOND</span></span></div>
+              </div>
+              <div style="background: linear-gradient(155deg, #3A0A1B 0%, #16060D 78%); padding: 16px 18px 20px; margin-top: 13px;"><div style="font-family: var(--rd-font-mono); font-size: 9.5px; letter-spacing: 0.13em; color: #FF5F7E;">PICKING UP WHERE YOU LEFT OFF</div><div style="font-weight: 600; font-size: 21px; color: #fff; margin-top: 7px; letter-spacing: -0.01em;">Tarte Maneater Mascara</div><div style="font-size: 12px; color: #CBB9BF; margin-top: 6px;">$26 · Tubing waterproof · You viewed this 2 min ago</div><div style="display: inline-block; margin-top: 15px; background: #FF2E6A; color: #fff; font-family: var(--rd-font-mono); font-size: 11px; font-weight: 700; letter-spacing: 0.08em; padding: 11px 24px; border-radius: 999px;">ADD TO BAG</div></div>
+              <div style="padding: 0 18px 18px;">
+                <div style="font-family: var(--rd-font-mono); font-size: 10px; letter-spacing: 0.13em; color: #E4E7EA; margin-top: 15px;">COMPLETE YOUR EYE ROUTINE</div>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 9px;">
+                  <div style="background: #1C0A12; border: 1px solid #7A1530; border-radius: 11px; padding: 10px; height: 82px; display: flex; flex-direction: column; justify-content: space-between;"><span style="font-weight: 600; font-size: 12px; line-height: 1.15; color: #fff;">Tartelette Palette</span><span style="font-size: 12px; font-weight: 600; color: #FF5F7E;">$41</span></div>
+                  <div style="background: #160A24; border: 1px solid #5A2A8C; border-radius: 11px; padding: 10px; height: 82px; display: flex; flex-direction: column; justify-content: space-between;"><span style="font-weight: 600; font-size: 12px; line-height: 1.15; color: #fff;">Better Than Sex Primer</span><span style="font-size: 12px; font-weight: 600; color: #B98AE6;">$25</span></div>
+                  <div style="background: #1C1408; border: 1px solid #7A5A14; border-radius: 11px; padding: 10px; height: 82px; display: flex; flex-direction: column; justify-content: space-between;"><span style="font-weight: 600; font-size: 12px; line-height: 1.15; color: #fff;">Lash Curler</span><span style="font-size: 12px; font-weight: 600; color: #E8B84B;">$18</span></div>
+                </div>
+                <div style="font-family: var(--rd-font-mono); font-size: 10px; letter-spacing: 0.13em; color: #E4E7EA; margin-top: 14px;">BIRTHDAY COMING UP · <span style="color: #5BC8FF;">14 DAYS</span></div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 9px;">
+                  <div style="background: #07212A; border: 1px solid #0E5A6E; border-radius: 11px; padding: 11px; height: 72px; display: flex; flex-direction: column; justify-content: space-between;"><span style="font-weight: 600; font-size: 12px; line-height: 1.15; color: #fff;">Pick Your Gift</span><span style="font-size: 12px; font-weight: 600; color: #5BC8FF;">FREE</span></div>
+                  <div style="background: #0C2208; border: 1px solid #2E6E1E; border-radius: 11px; padding: 11px; height: 72px; display: flex; flex-direction: column; justify-content: space-between;"><span style="font-weight: 600; font-size: 12px; line-height: 1.15; color: #fff;">2,840 pts Reward</span><span style="font-size: 12px; font-weight: 600; color: #7AD94B;">$28</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== STAGE 8 · LTV OPTIMIZATION ===================== -->
+      <section data-screen-label="08 LTV Optimization" style="position: absolute; inset: 0; display: {{ d7 }}; flex-direction: column;">
+        <div style="display: flex; flex-direction: column; gap: 6px; flex: none;">
+          <span style="font-family: var(--rd-font-mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--rd-hyper-04);">Stage 8 · LTV optimization</span>
+          <h2 style="margin: 0; font-weight: 500; font-size: 38px; line-height: 1.04; letter-spacing: -0.02em;">Personalization meets lifetime value.</h2>
+          <p style="margin: 2px 0 0; font-size: 15px; line-height: 1.5; color: var(--rd-dusk-04); max-width: 1040px;">L'Oréal optimizes for guest lifetime value, not just this session's basket. Diamond members get a routine-completion boost, replenishment-overdue products get a recency multiplier, and the model balances immediate conversion against long-term loyalty health.</p>
+        </div>
+
+        <div style="flex: 1; min-height: 0; display: grid; grid-template-columns: 1.15fr 1fr; gap: 24px; margin-top: 20px;">
+          <div style="display: flex; flex-direction: column; gap: 10px;">
+            <span style="font-family: var(--rd-font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rd-dusk-05);">LTV-weighted ranking logic</span>
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 12px 16px;"><span style="font-size: 13.5px;">Diamond tier LTV multiplier</span><span style="font-family: var(--rd-font-mono); font-size: 13px; color: var(--rd-yellow-05);">1.3× routine-completion</span></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 12px 16px;"><span style="font-size: 13.5px;">Replenishment overdue boost</span><span style="font-family: var(--rd-font-mono); font-size: 13px; color: var(--rd-yellow-05);">1.25× category-overdue</span></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 12px 16px;"><span style="font-size: 13.5px;">Birthday window boost</span><span style="font-family: var(--rd-font-mono); font-size: 13px; color: var(--rd-yellow-05);">1.2× gift-eligible</span></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 12px 16px;"><span style="font-size: 13.5px;">Frequency cap (same brand)</span><span style="font-family: var(--rd-font-mono); font-size: 13px; color: var(--rd-dusk-02);">Max 2 SKUs / home</span></div>
+            <div style="display: flex; justify-content: space-between; align-items: center; background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 12px 16px;"><span style="font-size: 13.5px;">Personalization quality floor</span><span style="font-family: var(--rd-font-mono); font-size: 13px; color: var(--rd-dusk-02);">Never below 75%</span></div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 14px;">
+            <div style="background: #0C1F29; border-left: 3px solid var(--rd-yellow-05); border-radius: 0 8px 8px 0; padding: 14px 16px;"><span style="font-size: 13.5px; line-height: 1.5; color: var(--rd-dusk-02);"><strong style="color: #fff; font-weight: 500;">The key insight:</strong> a 3-product eye routine (mascara + palette + primer) at $92 AOV generates 2.5× more LTV than a single $26 mascara, because routine completion drives the next visit — and the visit after that.</span></div>
+            <span style="font-family: var(--rd-font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rd-dusk-05);">Projected session impact</span>
+            <div style="display: flex; align-items: stretch; gap: 14px;">
+              <div style="flex: 1; background: #0C1F29; border: 1px solid #234251; border-radius: 10px; padding: 16px; text-align: center;"><div style="font-weight: 500; font-size: 30px; color: var(--rd-dusk-03);">$2.18</div><div style="font-size: 11.5px; color: var(--rd-dusk-05); margin-top: 4px;">Generic home screen — Sarah closes the app</div></div>
+              <div style="display: flex; align-items: center; color: var(--rd-hyper-04); font-size: 22px;">→</div>
+              <div style="flex: 1; background: #0C1F29; border: 1px solid var(--rd-yellow-05); border-radius: 10px; padding: 16px; text-align: center;"><div style="font-weight: 500; font-size: 30px; color: var(--rd-yellow-05);">$7.92</div><div style="font-size: 11.5px; color: var(--rd-dusk-04); margin-top: 4px;">Personalized — 3-product eye routine added</div></div>
+            </div>
+            <p style="margin: 0; font-size: 12.5px; line-height: 1.5; color: var(--rd-dusk-05);">Per-session lift across <strong style="color: var(--rd-dusk-02); font-weight: 500;">46M+ loyalty members</strong> driving 95% of sales — the holiday-readiness story.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===================== STAGE 9 · ARCHITECTURE RECAP (Redis) ===================== -->
+      <section data-screen-label="09 Architecture Recap" style="position: absolute; inset: 0; display: {{ d8 }}; flex-direction: column;">
+        <div style="display: flex; flex-direction: column; gap: 6px; flex: none;">
+          <span style="font-family: var(--rd-font-mono); font-size: 12px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--rd-hyper-04);">Stage 9 · The architecture, proven</span>
+          <h2 style="margin: 0; font-weight: 500; font-size: 34px; line-height: 1.04; letter-spacing: -0.02em;">Eight stages. Under ten milliseconds. Holiday-ready.</h2>
+          <p style="margin: 2px 0 0; font-size: 14.5px; line-height: 1.5; color: var(--rd-dusk-04); max-width: 1080px;">Every component, running together — proven at sub-10ms for 46M+ loyalty members through peak holiday traffic. Adobe CDP, Snowflake, Postgres, Databricks, and Kafka feed the decisioning layer; L'Oréal.com and the mobile app render. <span style="color: var(--rd-hyper-04);">Roll over any layer to reveal what powers it.</span></p>
+        </div>
+
+        <div class="arch-row" style="flex: 1; min-height: 0; display: flex; align-items: stretch; gap: 2px; margin-top: 18px;">
+          <div class="arch-col" style="flex: 1.15; min-width: 0; display: flex; flex-direction: column; gap: 7px; border-top: 2px solid var(--rd-blue-03); padding-top: 8px;">
+            <span style="font-family: var(--rd-font-mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rd-blue-03);">Data Sources</span>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 8px 10px; display: flex; gap: 8px; align-items: center;"><span style="font-family: var(--rd-font-mono); font-size: 9px; color: var(--rd-blue-03); border: 1px solid #234251; border-radius: 4px; padding: 3px 5px; flex: none;">CDP</span><div style="min-width:0;"><div style="font-size: 12px; font-weight: 500; line-height: 1.15;">Adobe Real-Time CDP</div><div style="display:grid;"><div class="rl-neutral" style="grid-area:1/1; font-size: 10px; color: var(--rd-dusk-05);">Unified guest profiles</div><div class="rl-redis" style="grid-area:1/1; font-size: 10px; font-weight: 500; color: var(--rd-hyper-04);">Redis Data Integration</div></div></div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 8px 10px; display: flex; gap: 8px; align-items: center;"><span style="font-family: var(--rd-font-mono); font-size: 9px; color: var(--rd-blue-03); border: 1px solid #234251; border-radius: 4px; padding: 3px 5px; flex: none;">SNOW</span><div style="min-width:0;"><div style="font-size: 12px; font-weight: 500; line-height: 1.15;">Snowflake</div><div style="display:grid;"><div class="rl-neutral" style="grid-area:1/1; font-size: 10px; color: var(--rd-dusk-05);">Loyalty 360 / order history</div><div class="rl-redis" style="grid-area:1/1; font-size: 10px; font-weight: 500; color: var(--rd-hyper-04);">Redis Data Integration</div></div></div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 8px 10px; display: flex; gap: 8px; align-items: center;"><span style="font-family: var(--rd-font-mono); font-size: 9px; color: var(--rd-blue-03); border: 1px solid #234251; border-radius: 4px; padding: 3px 5px; flex: none;">PG</span><div style="min-width:0;"><div style="font-size: 12px; font-weight: 500; line-height: 1.15;">Oracle / Postgres</div><div style="display:grid;"><div class="rl-neutral" style="grid-area:1/1; font-size: 10px; color: var(--rd-dusk-05);">Commerce + product catalog</div><div class="rl-redis" style="grid-area:1/1; font-size: 10px; font-weight: 500; color: var(--rd-hyper-04);">Redis Data Integration</div></div></div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 8px 10px; display: flex; gap: 8px; align-items: center;"><span style="font-family: var(--rd-font-mono); font-size: 9px; color: var(--rd-blue-03); border: 1px solid #234251; border-radius: 4px; padding: 3px 5px; flex: none;">DBX</span><div style="min-width:0;"><div style="font-size: 12px; font-weight: 500; line-height: 1.15;">Databricks</div><div style="display:grid;"><div class="rl-neutral" style="grid-area:1/1; font-size: 10px; color: var(--rd-dusk-05);">Beauty Graph / ML features</div><div class="rl-redis" style="grid-area:1/1; font-size: 10px; font-weight: 500; color: var(--rd-hyper-04);">Feature Pipelines → Redis</div></div></div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 8px 10px; display: flex; gap: 8px; align-items: center;"><span style="font-family: var(--rd-font-mono); font-size: 9px; color: var(--rd-blue-03); border: 1px solid #234251; border-radius: 4px; padding: 3px 5px; flex: none;">KFK</span><div style="min-width:0;"><div style="font-size: 12px; font-weight: 500; line-height: 1.15;">Kafka</div><div style="display:grid;"><div class="rl-neutral" style="grid-area:1/1; font-size: 10px; color: var(--rd-dusk-05);">Live behavioral telemetry</div><div class="rl-redis" style="grid-area:1/1; font-size: 10px; font-weight: 500; color: var(--rd-hyper-04);">Redis Data Integration</div></div></div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 8px 10px; display: flex; gap: 8px; align-items: center;"><span style="font-family: var(--rd-font-mono); font-size: 9px; color: var(--rd-blue-03); border: 1px solid #234251; border-radius: 4px; padding: 3px 5px; flex: none;">OMS</span><div style="min-width:0;"><div style="font-size: 12px; font-weight: 500; line-height: 1.15;">OMS / Fulfilment</div><div style="display:grid;"><div class="rl-neutral" style="grid-area:1/1; font-size: 10px; color: var(--rd-dusk-05);">Order status, shipping + carrier events</div><div class="rl-redis" style="grid-area:1/1; font-size: 10px; font-weight: 500; color: var(--rd-hyper-04);">Redis Data Integration</div></div></div></div>
+          </div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-col" style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 7px; border-top: 2px solid var(--rd-purple-04); padding-top: 8px;">
+            <span style="font-family: var(--rd-font-mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rd-purple-04);">Ingest Layer</span>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 10px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">CDC Pipelines</div><div style="display:grid; margin-top: 3px;"><div class="rl-neutral" style="grid-area:1/1; font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.35;">Real-time CDC, sub-second sync, declarative transformation pipelines, proactive data staging</div><div class="rl-redis" style="grid-area:1/1; align-self: start; font-size: 11px; font-weight: 500; color: var(--rd-hyper-04); line-height: 1.35;">Redis Data Integration (RDI)</div></div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 10px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Feature Pipelines</div><div style="display:grid; margin-top: 3px;"><div class="rl-neutral" style="grid-area:1/1; font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.35;">Feature engineering and ingestion from the Beauty Graph</div><div class="rl-redis" style="grid-area:1/1; align-self: start; font-size: 11px; font-weight: 500; color: var(--rd-hyper-04); line-height: 1.35;">FeatureForm</div></div></div>
+          </div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-col" style="flex: 1.05; min-width: 0; display: flex; flex-direction: column; gap: 7px; border-top: 2px solid var(--rd-yellow-05); padding-top: 8px;">
+            <span style="font-family: var(--rd-font-mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rd-yellow-05);">Context Tier · Operational 360</span>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 9px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Hot Store</div><div style="display:grid; margin-top: 2px;"><div class="rl-neutral" style="grid-area:1/1; font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.3;">In-memory, sub-ms, live session signals</div><div class="rl-redis" style="grid-area:1/1; align-self: start; font-size: 11px; font-weight: 500; color: var(--rd-hyper-04); line-height: 1.3;">Redis RAM</div></div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 9px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Warm Store</div><div style="display:grid; margin-top: 2px;"><div class="rl-neutral" style="grid-area:1/1; font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.3;">Full guest history, embeddings</div><div class="rl-redis" style="grid-area:1/1; align-self: start; font-size: 11px; font-weight: 500; color: var(--rd-hyper-04); line-height: 1.3;">Redis Flex</div></div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 9px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Feature Store</div><div style="display:grid; margin-top: 2px;"><div class="rl-neutral" style="grid-area:1/1; font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.3;">ML features, train/serve parity</div><div class="rl-redis" style="grid-area:1/1; align-self: start; font-size: 11px; font-weight: 500; color: var(--rd-hyper-04); line-height: 1.3;">Redis + FeatureForm</div></div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 9px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Order State</div><div style="display:grid; margin-top: 2px;"><div class="rl-neutral" style="grid-area:1/1; font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.3;">Live order + fulfilment tracking</div><div class="rl-redis" style="grid-area:1/1; align-self: start; font-size: 11px; font-weight: 500; color: var(--rd-hyper-04); line-height: 1.3;">Redis Streams</div></div></div>
+            <div style="display: flex; flex-wrap: wrap; gap: 4px; margin-top: 1px;">
+              <span style="font-family: var(--rd-font-mono); font-size: 9px; color: var(--rd-dusk-04); background: #13262F; border-radius: 3px; padding: 3px 6px;">JSON Profiles</span>
+              <span style="font-family: var(--rd-font-mono); font-size: 9px; color: var(--rd-dusk-04); background: #13262F; border-radius: 3px; padding: 3px 6px;">Time Series</span>
+              <span style="font-family: var(--rd-font-mono); font-size: 9px; color: var(--rd-dusk-04); background: #13262F; border-radius: 3px; padding: 3px 6px;">Streams</span>
+              <span style="font-family: var(--rd-font-mono); font-size: 9px; color: var(--rd-dusk-04); background: #13262F; border-radius: 3px; padding: 3px 6px;">Vectors</span>
+              <span style="font-family: var(--rd-font-mono); font-size: 9px; color: var(--rd-dusk-04); background: #13262F; border-radius: 3px; padding: 3px 6px;">Session State</span>
+            </div>
+          </div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-col" style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 7px; border-top: 2px solid var(--rd-hyper-05); padding-top: 8px;">
+            <span style="font-family: var(--rd-font-mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rd-hyper-04);">Decision Engine</span>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 9px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Rules / Policy</div><div style="display:grid; margin-top: 2px;"><div class="rl-neutral" style="grid-area:1/1; font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.3;">Inventory, eligibility, frequency caps</div><div class="rl-redis" style="grid-area:1/1; align-self: start; font-size: 11px; font-weight: 500; color: var(--rd-hyper-04); line-height: 1.3;">Redis data types</div></div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 9px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">ML Ranker</div><div style="display:grid; margin-top: 2px;"><div class="rl-neutral" style="grid-area:1/1; font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.3;">Beauty Graph + LTV weighting</div><div class="rl-redis" style="grid-area:1/1; align-self: start; font-size: 11px; font-weight: 500; color: var(--rd-hyper-04); line-height: 1.3;">Redis online features</div></div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 9px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Vector Search</div><div style="display:grid; margin-top: 2px;"><div class="rl-neutral" style="grid-area:1/1; font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.3;">Semantic product matching</div><div class="rl-redis" style="grid-area:1/1; align-self: start; font-size: 11px; font-weight: 500; color: var(--rd-hyper-04); line-height: 1.3;">Redis vector search</div></div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 9px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Search Index</div><div style="display:grid; margin-top: 2px;"><div class="rl-neutral" style="grid-area:1/1; font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.3;">Full-text + faceted navigation</div><div class="rl-redis" style="grid-area:1/1; align-self: start; font-size: 11px; font-weight: 500; color: var(--rd-hyper-04); line-height: 1.3;">Redis full-text search</div></div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 9px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Semantic Cache</div><div style="display:grid; margin-top: 2px;"><div class="rl-neutral" style="grid-area:1/1; font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.3;">GenAI assistant acceleration</div><div class="rl-redis" style="grid-area:1/1; align-self: start; font-size: 11px; font-weight: 500; color: var(--rd-hyper-04); line-height: 1.3;">Redis LangCache</div></div></div>
+          </div>
+          <div class="arch-arrow">→</div>
+          <div class="arch-col" style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 7px; border-top: 2px solid var(--rd-dusk-04); padding-top: 8px;">
+            <span style="font-family: var(--rd-font-mono); font-size: 10.5px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--rd-dusk-04);">Application Features</span>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 8px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Search Navigation</div><div style="display:grid; margin-top: 2px;"><div class="rl-neutral" style="grid-area:1/1; font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.25;">Instant, typo-tolerant results</div><div class="rl-redis" style="grid-area:1/1; align-self: start; font-size: 11px; font-weight: 500; color: var(--rd-hyper-04); line-height: 1.25;">Redis full-text search</div></div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 8px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Shopping Basket</div><div style="display:grid; margin-top: 2px;"><div class="rl-neutral" style="grid-area:1/1; font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.25;">Live cart + session state</div><div class="rl-redis" style="grid-area:1/1; align-self: start; font-size: 11px; font-weight: 500; color: var(--rd-hyper-04); line-height: 1.25;">Redis session state</div></div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 8px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Product Recommendations</div><div style="display:grid; margin-top: 2px;"><div class="rl-neutral" style="grid-area:1/1; font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.25;">Personalized "For You" grid</div><div class="rl-redis" style="grid-area:1/1; align-self: start; font-size: 11px; font-weight: 500; color: var(--rd-hyper-04); line-height: 1.25;">Redis vector search</div></div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 8px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Loyalty Page</div><div style="display:grid; margin-top: 2px;"><div class="rl-neutral" style="grid-area:1/1; font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.25;">Real-time points + birthday</div><div class="rl-redis" style="grid-area:1/1; align-self: start; font-size: 11px; font-weight: 500; color: var(--rd-hyper-04); line-height: 1.25;">Redis real-time counters</div></div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 8px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Order Tracking</div><div style="display:grid; margin-top: 2px;"><div class="rl-neutral" style="grid-area:1/1; font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.25;">Live order + fulfilment status</div><div class="rl-redis" style="grid-area:1/1; align-self: start; font-size: 11px; font-weight: 500; color: var(--rd-hyper-04); line-height: 1.25;">Redis Streams</div></div></div>
+            <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 7px; padding: 8px 11px;"><div style="font-size: 12.5px; font-weight: 500; line-height: 1.2;">Support Chatbot</div><div style="display:grid; margin-top: 2px;"><div class="rl-neutral" style="grid-area:1/1; font-size: 10.5px; color: var(--rd-dusk-05); line-height: 1.25;">GenAI assistant</div><div class="rl-redis" style="grid-area:1/1; align-self: start; font-size: 11px; font-weight: 500; color: var(--rd-hyper-04); line-height: 1.25;">Redis LangCache</div></div></div>
+          </div>
+        </div>
+
+        <div style="flex: none; margin-top: 14px; display: flex; align-items: center; gap: 12px; background: #0A1A22; border: 1px dashed #2D4754; border-radius: 8px; padding: 9px 16px;">
+          <span style="font-size: 16px; color: var(--rd-yellow-05);">↺</span>
+          <span style="font-size: 12px; color: var(--rd-dusk-03); line-height: 1.3;"><strong style="color: #fff; font-weight: 500;">Learn:</strong> Decision exhaust → Kafka → Databricks training → updated models → redeployed to the context tier</span>
+        </div>
+
+        <div style="flex: none; margin-top: 12px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;">
+          <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 11px 16px; display: flex; align-items: baseline; justify-content: space-between;"><span style="font-family: var(--rd-font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--rd-dusk-05);">Pipeline latency (P99)</span><span style="font-weight: 500; font-size: 22px; color: var(--rd-yellow-05); white-space: nowrap;">8.4 ms</span></div>
+          <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 11px 16px; display: flex; align-items: baseline; justify-content: space-between;"><span style="font-family: var(--rd-font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--rd-dusk-05);">Add-to-cart lift</span><span style="font-weight: 500; font-size: 22px; color: var(--rd-yellow-05); white-space: nowrap;">3.1% → 11.4%</span></div>
+          <div style="background: #0C1F29; border: 1px solid #234251; border-radius: 8px; padding: 11px 16px; display: flex; align-items: baseline; justify-content: space-between;"><span style="font-family: var(--rd-font-mono); font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--rd-dusk-05);">Revenue / session</span><span style="font-weight: 500; font-size: 22px; color: var(--rd-yellow-05); white-space: nowrap;">$2.18 → $7.92</span></div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ===== FOOTER NAV ===== -->
+    <div style="display: flex; align-items: center; justify-content: space-between; flex: none; margin-top: 16px; padding-top: 14px; border-top: 1px solid #16303C;">
+      <button onClick="{{ prev }}" style="display: flex; align-items: center; gap: 8px; background: none; border: none; cursor: pointer; font-family: var(--rd-font-sans); font-size: 14px; color: var(--rd-hyper-04); opacity: {{ backOpacity }};">← Back</button>
+      <span style="font-family: var(--rd-font-mono); font-size: 11px; letter-spacing: 0.08em; color: var(--rd-dusk-06);">Press ← → or click the stepper to navigate</span>
+      <button onClick="{{ next }}" style="display: flex; align-items: center; gap: 8px; background: none; border: none; cursor: pointer; font-family: var(--rd-font-sans); font-size: 14px; color: var(--rd-hyper-04); opacity: {{ nextOpacity }};">Next →</button>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { current: 0, vw: 1600, vh: 900 };
+
+  componentDidMount() {
+    let saved = 0;
+    try { saved = parseInt(localStorage.getItem('ulta_stage') || '0', 10) || 0; } catch (e) {}
+    saved = Math.max(0, Math.min(8, saved));
+    this._onResize = () => this.setState({ vw: window.innerWidth, vh: window.innerHeight });
+    this._onKey = (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); this.go(this.state.current + 1); }
+      else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); this.go(this.state.current - 1); }
+    };
+    window.addEventListener('resize', this._onResize);
+    window.addEventListener('keydown', this._onKey);
+    this._onVis = () => { if (!document.hidden) requestAnimationFrame(() => this.animateStage(this.state.current)); };
+    document.addEventListener('visibilitychange', this._onVis);
+    this.setState({ vw: window.innerWidth, vh: window.innerHeight, current: saved }, () => {
+      requestAnimationFrame(() => this.animateStage(this.state.current));
+    });
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener('resize', this._onResize);
+    window.removeEventListener('keydown', this._onKey);
+    document.removeEventListener('visibilitychange', this._onVis);
+  }
+
+  animateStage(i) {
+    const root = this._contentRef && this._contentRef.current;
+    if (!root) return;
+    const section = root.children[i];
+    if (!section) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    const EASE = 'cubic-bezier(0.16, 1, 0.3, 1)';
+    const rise = (el, delay, dist) => el.animate(
+      [{ opacity: 0, transform: 'translateY(' + (dist || 15) + 'px)' }, { opacity: 1, transform: 'translateY(0)' }],
+      { duration: 470, delay: delay, easing: EASE, fill: 'backwards' });
+    const floatIn = (el, delay) => el.animate(
+      [{ opacity: 0, transform: 'translateX(-12px)' }, { opacity: 1, transform: 'translateX(0)' }],
+      { duration: 440, delay: delay, easing: EASE, fill: 'backwards' });
+
+    // Header text (eyebrow, headline, lead) rises in first.
+    let order = 0;
+    const header = section.firstElementChild;
+    if (header) {
+      Array.prototype.forEach.call(header.children, (el) => { rise(el, order * 75); order++; });
+    }
+    const base = order * 75 + 60;
+
+    const arrows = [];
+    section.querySelectorAll('div, span').forEach((el) => {
+      if (el.children.length === 0 && el.textContent.trim() === '\u2192') arrows.push(el);
+    });
+
+    const cols = section.querySelectorAll('.arch-col');
+    if (cols.length) {
+      // Architecture stages: each column loads in one after another, with its arrow.
+      const STEP = 155;
+      cols.forEach((el, idx) => rise(el, base + idx * STEP, 20));
+      arrows.forEach((el, idx) => floatIn(el, base + 100 + idx * STEP));
+      // Then the learn loop + stat row (everything after the diagram row).
+      const tailStart = base + cols.length * STEP + 30;
+      for (let k = 2; k < section.children.length; k++) {
+        rise(section.children[k], tailStart + (k - 2) * 110);
+      }
+      return;
+    }
+
+    // Other stages: cards / nodes / panels stagger up in document order.
+    const panels = section.querySelectorAll('[style*="#0C1F29"], [style*="#0B0B0E"], [style*="#1A0E10"], [style*="#0A1A22"]');
+    panels.forEach((el, idx) => rise(el, base + Math.min(idx * 45, 820)));
+    arrows.forEach((el, idx) => floatIn(el, base + 150 + idx * 50));
+
+    // Distribution / category bars fill from zero.
+    const barWrap = section.querySelector('[data-anim="bars"]');
+    if (barWrap) {
+      Array.prototype.forEach.call(barWrap.children, (el, idx) => {
+        el.style.transformOrigin = 'left';
+        el.animate([{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }],
+          { duration: 660, delay: base + 240 + idx * 95, easing: EASE, fill: 'backwards' });
+      });
+    }
+  }
+
+  go(i) {
+    const n = Math.max(0, Math.min(8, i));
+    try { localStorage.setItem('ulta_stage', String(n)); } catch (e) {}
+    this.setState({ current: n }, () => {
+      requestAnimationFrame(() => this.animateStage(n));
+    });
+  }
+
+  renderVals() {
+    const cur = this.state.current;
+    const scale = Math.min(this.state.vw / 1600, this.state.vh / 900);
+    const labels = ['Architecture','Session Start','Ingest','Context','Feature Serving','Ranking','Outcome','LTV Optimization','Architecture Recap'];
+    const steps = labels.map((label, i) => {
+      const st = i === cur ? 'active' : (i < cur ? 'done' : 'upcoming');
+      return {
+        num: String(i + 1),
+        label: label,
+        circleBg: st === 'active' ? 'var(--rd-hyper-05)' : 'transparent',
+        circleFg: st === 'active' ? '#fff' : (st === 'done' ? '#fff' : 'var(--rd-dusk-05)'),
+        circleBorder: st === 'active' ? 'var(--rd-hyper-05)' : (st === 'done' ? 'var(--rd-dusk-05)' : 'var(--rd-dusk-08)'),
+        labelColor: st === 'active' ? '#fff' : (st === 'done' ? 'var(--rd-dusk-03)' : 'var(--rd-dusk-06)'),
+        labelWeight: st === 'active' ? '500' : '400',
+        onClick: () => this.go(i)
+      };
+    });
+    const d = (i) => (cur === i ? 'flex' : 'none');
+    const pad2 = (n) => (n < 10 ? '0' + n : '' + n);
+    return {
+      scale: scale,
+      stageRef: this._stageRef || (this._stageRef = React.createRef()),
+      contentRef: this._contentRef || (this._contentRef = React.createRef()),
+      counterNum: pad2(cur + 1),
+      counterTotal: '09',
+      steps: steps,
+      prev: () => this.go(cur - 1),
+      next: () => this.go(cur + 1),
+      d0: d(0), d1: d(1), d2: d(2), d3: d(3), d4: d(4), d5: d(5), d6: d(6), d7: d(7), d8: d(8),
+      backOpacity: cur === 0 ? '0.35' : '1',
+      nextOpacity: cur === 8 ? '0.35' : '1'
+    };
+  }
+}
+</script>
+</body>
+</html>
